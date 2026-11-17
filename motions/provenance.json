@@ -1,0 +1,16 @@
+{
+  "schema": "taka-motion-reference-provenance/1",
+  "reference_sha256": "016cd45bc168f2fda471d5081fdef7377bca4ab7f8b40edd05f944e547bb8b7a",
+  "reference_schema": "taka-game-reference/2",
+  "geometry_included": false,
+  "global_amplitude": 1.0,
+  "source": "Creator-adjusted Taka game motion reference; same reference as the previous 10N experiment",
+  "clips": [
+    "Idle_preview",
+    "Walk_preview",
+    "Jog_preview",
+    "Run_preview",
+    "Jump_preview"
+  ],
+  "license": "CC-BY-4.0"
+}

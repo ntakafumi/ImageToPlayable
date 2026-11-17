@@ -1,0 +1,19 @@
+{
+  "schema": "motionstudio-feature/1",
+  "id": "image-to-character",
+  "number": "10",
+  "target_major": 8,
+  "adapter": "integration/motionstudio-adapter.js",
+  "notebooks": [
+    "01_Image_to_Taka_Motion_L4.ipynb",
+    "02_Existing_Rig_to_Taka_Motion.ipynb"
+  ],
+  "outputs": [
+    "character.glb",
+    "character.json"
+  ],
+  "jump_translation_baked": true,
+  "source_storage": "mounted Google Drive",
+  "notebook_embeds_runtime": false,
+  "requires_source_tree_on_drive": true
+}
