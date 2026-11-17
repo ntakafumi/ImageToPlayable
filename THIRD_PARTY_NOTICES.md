@@ -1,6 +1,6 @@
 # Third-party components
 
-The MIT license in this repository applies to the original tutorial code only.
+Original independent tutorial code is MIT-licensed. The Blender API script tools/animate10.py is GPL-3.0-or-later; see LICENSE and LICENSING.md.
 Dependencies and pretrained weights are downloaded separately; their own licenses apply.
 No character meshes, textures, model weights, or upstream source trees are bundled. The included Taka animation reference has separate terms in MOTIONS_LICENSE.md.
 
@@ -22,3 +22,14 @@ Pinned source commits and weight revisions are specified in reference/setup_l4.p
 reference/generate_mesh.py and reference/rig_mesh.py. Transitive dependencies have
 additional terms. A permissive tutorial-code license does not replace those terms.
 The viewer fetches Three.js from jsDelivr at runtime; internet access is required.
+
+## Restrictions in the installed image-generation environment
+
+The environment is not wholly MIT-licensed and is not offered as a commercially unrestricted stack.
+
+* nvdiffrast at 253ac4fcea7de5f396371124af597e6cc957bfae uses the [NVIDIA Source Code License](https://raw.githubusercontent.com/NVlabs/nvdiffrast/253ac4fcea7de5f396371124af597e6cc957bfae/LICENSE.txt). Section 3.3 limits use to non-commercial research or evaluation without direct or indirect monetary gain.
+* The rasterizer actually built from mip-splatting at dda02ab5ecf45d6edb8c540d9bb65c7e451345a9 has its own [Gaussian-Splatting License](https://raw.githubusercontent.com/autonomousvision/mip-splatting/dda02ab5ecf45d6edb8c540d9bb65c7e451345a9/submodules/diff-gaussian-rasterization/LICENSE.md), restricting use to non-commercial research or evaluation unless separately permitted.
+* Blender Python API scripts have GPL-related distribution requirements. The script and complete GPL text are provided in this source tree; see LICENSING.md.
+
+The MIT license of TRELLIS or SkinTokens does not override these dependencies.
+No commercial-use permission for these components is supplied by this repository.

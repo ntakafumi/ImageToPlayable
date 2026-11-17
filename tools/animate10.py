@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2026 Takafumi Nakanishi
+# Distributed under GNU GPL version 3 or later; see LICENSES/GPL-3.0-or-later.txt.
+# Provided without warranty, including merchantability or fitness for a purpose.
 """Normalize the bind pose and infer semantic roles. Does not create motion clips."""
 
 from pathlib import Path

@@ -1,26 +1,21 @@
-MIT License
+ImageToPlayable licensing
+=========================
 
-Copyright (c) 2026 Takafumi Nakanishi
+Copyright (c) 2026 Takafumi Nakanishi, for original contributions.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This repository contains components with separate licenses:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+* Original independent tutorial code and documentation: MIT.
+  Full text: LICENSES/MIT.txt.
+* tools/animate10.py, the Blender Python API script: GPL-3.0-or-later.
+  Full text: LICENSES/GPL-3.0-or-later.txt.
+  Combinations with Blender must comply with the applicable GPL requirements.
+  MIT-licensed helper modules retain their MIT notices; MIT is GPL-compatible.
+* motions/taka-motion.json: separate terms in MOTIONS_LICENSE.md.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Third-party code, dependencies, weights, user images, character designs and
+outputs are not relicensed by this file. In particular, parts of the image
+mesh-generation environment are restricted to non-commercial research and
+evaluation use. Read LICENSING.md and THIRD_PARTY_NOTICES.md before execution.
 
-This license applies only to the original tutorial code and documentation.
-The motion-reference data has separate terms in MOTIONS_LICENSE.md.
-This license does not cover third-party dependencies, model weights, user images,
-character designs, or generated character assets.
+No blanket commercial-use permission for the complete pipeline is granted.

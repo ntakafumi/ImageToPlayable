@@ -49,6 +49,7 @@ Notebookだけを別の場所で開くこともできますが、参照するコ
 4. セルを順番に実行し、専用環境を準備します。
 5. `IMAGE_PATH` または `RIG_PATH` にDrive上の入力ファイルを指定します。空欄ならファイル選択画面が開きます。
 6. 動作移植と表示のセルを実行し、各方向から確認します。
+   02に `character-taka-result.zip` を指定した場合は、ハッシュと5動作を検査し、再移植せず保存済みの同じキャラを表示します。
 7. 保存セルでDriveの `outputs/実行ID/` へ結果ZIPを保存します。PCへのダウンロードは任意です。
 
 標準の `PROJECT_DIR` は次の場所です。共有ドライブなど別の配置先も指定できます。
@@ -95,11 +96,23 @@ PROJECT_DIR = '/content/drive/MyDrive/Colab Notebooks/GameCreation/MotionStudio/
 - `build_notebook.py`：Notebookの生成
 - `check_release.py`：構文と配布物の検査
 
-## ライセンス
+## ライセンスと生成環境の利用範囲
 
-独自の教材コードは [MIT License](LICENSE)、収録動作データは [MOTIONS_LICENSE.md](MOTIONS_LICENSE.md)に従います。
-依存ライブラリとモデル重みはそれぞれの条件に従います。配布元は [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)を参照してください。
-記事に登場する、たかにゃんとTakaの画像、モデル、テクスチャ、ゲーム背景は同梱していません。
+独立した教材コードと文書はMIT、Blender Python APIを使う `tools/animate10.py` はGPL-3.0-or-laterで提供します。
+ライセンス本文は `LICENSES/` に同梱しています。
+MITの補助コードをBlenderと組み合わせる場合も、その組み合わせに適用されるGPLの条件に従ってください。
+通常のGLBや動画の出力が、それだけでGPLになるという意味ではありません。
+
+**01の画像生成環境全体は、商用利用自由ではありません。**
+実際に使うnvdiffrastとGaussian rasterizerには、非商用の研究と評価に利用を限定する条件があります。
+商用の生成サービスや商用素材制作へ利用する場合は、必要な別許諾を得るか、該当ライブラリを置き換えて検証してください。
+コードをMITやGPLで公開することは、この利用制限を解除しません。
+
+02で完成結果を再表示する際は、画像生成処理を再実行しません。
+生成時の利用目的や入力画像、動作データの権利まで自動的に解決するものではありません。
+詳しくは [LICENSING.md](LICENSING.md) と [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) を参照してください。
+収録動作データは [MOTIONS_LICENSE.md](MOTIONS_LICENSE.md) に従います。
+たかにゃんとTakaの画像、モデル、テクスチャ、ゲーム背景は同梱していません。
 
 ## 関連記事
 

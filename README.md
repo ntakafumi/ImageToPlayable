@@ -75,10 +75,14 @@ Use an authorized full-body, front-facing A/T-pose image with separated arms. Un
 - `build_notebook.py`: generate notebooks
 - `check_release.py`: source and release checks
 
-## Licensing
+## Licensing and generation-use restrictions
 
-Original tutorial code: [MIT](LICENSE). Included motion reference: [MOTIONS_LICENSE.md](MOTIONS_LICENSE.md). Dependencies and model weights have separate terms; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Original independent tutorial code and documentation: MIT. The Blender API script `tools/animate10.py`: GPL-3.0-or-later. Full texts are in `LICENSES/`. Combinations with Blender must comply with the applicable GPL terms. Ordinary GLB or video output does not automatically become GPL-licensed.
 
+**The image-generation environment in notebook 01 is not commercially unrestricted.** The pinned nvdiffrast and Gaussian rasterizer components limit use to non-commercial research and evaluation. Commercial asset production or generation services require appropriate separate permissions or replacement and validation of the restricted components. MIT/GPL licensing of the tutorial does not remove upstream use restrictions.
+
+Notebook 02 reopens completed results without rerunning image generation. This does not settle permissions for the original generation purpose, input artwork or motion data.
+See [LICENSING.md](LICENSING.md), [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), and the separate motion terms in [MOTIONS_LICENSE.md](MOTIONS_LICENSE.md).
 Takanyan and Taka images, meshes, textures and the game environment are not bundled.
 
 ## Related article
@@ -88,3 +92,5 @@ Taka is the author's game character with an existing rig, skinning and developed
 ## Verified environment
 
 The mesh-generation, rigging, five-motion retargeting and animated-GLB export stages were run on a Colab L4. The existing-rig resume path was also run. Browser loading, view changes and paused pose inspection were checked. The motion reference is byte-identical to the previous 10N experiment. Joint-deformation warnings remain in the tested examples; see [VALIDATION.md](VALIDATION.md).
+
+Completed `character-taka-result.zip` files can be reopened in notebook 02. The model hash, motion reference, five clips and direction report are checked before reuse; the existing animation is not applied twice.
