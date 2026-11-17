@@ -32,9 +32,41 @@ def align(source,out):
     scene['nodes']=[root];g.write(out)
     return dict(yaw_degrees=float(np.degrees(yaw)),source_sha256=digest(source))
 
+def restore_completed(source, out, reference):
+    """Resume a verified result from this input, without re-rigging its posed bones."""
+    imported = source.parent / 'completed-input'
+    if not imported.is_dir():
+        return False
+    info = json.loads((imported / 'character.json').read_text())
+    model = imported / 'character.glb'
+    if digest(model) != digest(source) or digest(model) != info.get('output_sha256'):
+        raise ValueError('保存結果のモデルSHA-256が一致しません。再加工せず停止します。')
+    if info.get('motion_reference_sha256') != digest(reference):
+        raise ValueError('保存結果のTaka動作参照がこの版と異なります。自動で再移植せず停止します。')
+    g = GLB(model)
+    expected = {'Idle_preview', 'Walk_preview', 'Jog_preview', 'Run_preview', 'Jump_preview'}
+    clips = {a.get('name') for a in g.meta.get('animations', [])}
+    if not expected.issubset(clips) or not g.meta.get('skins'):
+        raise ValueError('保存結果の5動作またはスキンが不足しています。')
+    validation = json.loads((imported / 'validation-report.json').read_text())
+    if not validation.get('direction_gate_passed'):
+        raise ValueError('保存結果の方向一致検査を確認できません。')
+    out.mkdir(parents=True, exist_ok=True)
+    target = out / 'character'
+    shutil.copytree(imported, target, dirs_exist_ok=True)
+    result = dict(status='complete' if validation.get('numeric_gate_passed') else 'complete_with_warnings',
+                  model_sha256=digest(model), motion_sha256=digest(reference),
+                  global_amplitude=1.0, validation=validation, operation='resume_completed_input')
+    (out / 'result.json').write_text(json.dumps(result, ensure_ascii=False, indent=2))
+    print('入力済みの5動作を保持して再表示します。リギング・動作移植は重ねて適用しません。', flush=True)
+    return True
+
 def main(source,out):
     out.mkdir(parents=True,exist_ok=True)
     tools=Path(__file__).resolve().parent
+    reference=tools.parent/'motions/taka-motion.json'
+    if restore_completed(source,out,reference):
+        return
     normalization=align(source,out/'aligned.glb')
     def run(name,*args):
         print('Stage:',name,flush=True)

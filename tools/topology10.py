@@ -87,8 +87,12 @@ def repair_roles(g, rest, report, height):
     # The path to the protected head defines the central trunk. At each fork,
     # lateral branches are arms; the neck/head branch cannot become a forearm.
     head_node = names.get(report.get("head_bone"))
-    if head_node not in subtree[pelvis]:
-        raise ValueError("頭部と骨盤のつながりを確認できません")
+    # A leg junction can be a helper below the shared torso root.
+    leg_junction = pelvis
+    while pelvis is not None and head_node not in subtree.get(pelvis, set()):
+        pelvis = g.parents.get(pelvis)
+    if pelvis is None:
+        raise ValueError("頭部と左右の脚につながる共通の幹を確認できません")
     trunk, node = [], head_node
     while node != pelvis:
         trunk.append(node)
@@ -102,7 +106,7 @@ def repair_roles(g, rest, report, height):
     for index, node in enumerate(trunk[:-1]):
         next_node = trunk[index + 1]
         for child in g.nodes[node].get("children", []):
-            if child == next_node or child in leg_nodes or child not in joints:
+            if child == next_node or child not in joints or bool(subtree[child] & leg_nodes):
                 continue
             lateral = max(subtree[child], key=lambda i: abs(head(i)[0] - head(node)[0]))
             dx = head(lateral)[0] - head(node)[0]
@@ -124,6 +128,7 @@ def repair_roles(g, rest, report, height):
         "changed": True,
         "reason": "脚の位置または階層に矛盾があるため接地枝と頭部への幹から再分類",
         "pelvis": g.nodes[pelvis]["name"],
+        "leg_junction": g.nodes[leg_junction]["name"],
         "before": roles,
         "after": mapped,
     }

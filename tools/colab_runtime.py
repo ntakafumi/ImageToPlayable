@@ -104,7 +104,25 @@ def prepare_rig(path, job):
                 candidates = [n for n in archive.namelist() if Path(n).name == 'character.glb']
             if len(candidates) != 1:
                 raise ValueError('対象のリグ付きGLBを1つに絞れません')
-            data = archive.read(candidates[0])
+            selected = candidates[0]
+            data = archive.read(selected)
+            parent = str(Path(selected).parent)
+            prefix = '' if parent == '.' else parent + '/'
+            metadata_name = prefix + 'character.json'
+            if Path(selected).name == 'character.glb' and metadata_name in archive.namelist():
+                metadata = json.loads(archive.read(metadata_name))
+                if metadata.get('motion_reference_sha256'):
+                    # Preserve the exact completed input; never turn it into a new bind pose.
+                    imported = job / 'completed-input'
+                    imported.mkdir(exist_ok=True)
+                    (imported / 'character.glb').write_bytes(data)
+                    for filename in ['character.json', 'validation-report.json',
+                                     'animation-report.json', 'arms-report.json',
+                                     'foot-contact-report.json']:
+                        member = prefix + filename
+                        if member in archive.namelist():
+                            (imported / filename).write_bytes(archive.read(member))
+                    print('動作移植済みの結果を検出しました。整合性検査後、そのまま再表示します。')
     if data[:4] != b'glTF':
         raise ValueError('GLB形式ではありません')
     destination = job / 'rigged.glb'
