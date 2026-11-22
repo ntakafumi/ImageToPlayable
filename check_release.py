@@ -12,7 +12,10 @@ for p in r.glob('*.ipynb'):
             assert not source.startswith('%'),f'Notebook must call the Drive source tree: {p.name}'
             ast.parse(source,filename=f'{p.name}:{i}')
     first=next(c for c in n['cells']if c['cell_type']=='code')
-    assert 'drive.mount' in ''.join(first['source'])
+    if p.name == '05_Paint3D_Texture_Refinement.ipynb':
+        assert 'drive.mount' not in ''.join(first['source'])
+    else:
+        assert 'drive.mount' in ''.join(first['source'])
     assert 'files.upload' not in ''.join(first['source'])
 motion=json.loads((r/'motions/taka-motion.json').read_text())
 assert motion['geometry_included'] is False and motion['global_amplitude']==1

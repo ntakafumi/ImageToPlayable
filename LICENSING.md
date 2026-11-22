@@ -57,3 +57,9 @@ paths from notebooks 01 and 02. Its setup does not build the TRELLIS
 mesh-generation path listed above. The TokenRig code and published checkpoints,
 third-party rigging dependencies, input assets, and the separate CC BY 4.0 motion license
 retain their own terms.
+
+## Notebook 05
+
+The repository's MIT license covers the original notebook code. Notebook 05 retrieves the pinned Apache-2.0 Paint3D code and downloads checkpoints from their upstream model repositories at runtime. This source package contains only the notebook and related documentation for 05. See the [checkpoint and runtime notices](THIRD_PARTY_NOTICES.md#notebook-05-paint3d).
+
+Apply the upstream model terms to your use. The Realistic Vision conversion's model card is tagged Apache-2.0, while the original publisher lists CreativeML Open RAIL-M. Account for the original model's use restrictions when using the conversion. Permission to publish an input GLB or a generated texture, character, or video also depends on the rights in the input artwork, mesh, and animation and on any terms from its earlier generation steps.

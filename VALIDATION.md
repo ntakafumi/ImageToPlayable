@@ -61,3 +61,7 @@ code 1, notebook 03 now creates an unseeded environment with uv and installs
 packages using uv pip. The environment creation was checked on Python 3.13,
 and the pinned packages resolved for Linux x86-64 with Python 3.13. The CUDA
 build and image-to-GLB run in hosted Colab remain to be exercised.
+
+## Notebook 05 Paint3D
+
+One animated yellow robot GLB completed the UV Tile experiment on a Colab NVIDIA L4 at 1024 × 1024 with maximum attention slicing applied to the UNet and both ControlNets. The downloaded ZIP's generated PNG matched the output GLB's embedded base colour byte for byte. Local checks confirmed that the mesh, skin, animation and metallic-roughness texture matched the input. This is a single-asset run. The public notebook was checked locally for syntax after editing its documentation.

@@ -16,10 +16,16 @@ Includes idle, walk, jog, run and jump. `motions/taka-motion.json` records frame
 | `02_Existing_Rig_to_Taka_Motion.ipynb` | Retarget an existing rigged GLB | Colab CPU is sufficient |
 | `03_Pixal3D_Mesh_Refinement.ipynb` | Generate from one PNG/JPEG with Pixal3D, then refine the texture | Colab L4 GPU |
 | `04_GLB_to_Taka_Motion.ipynb` | Rig one static GLB and apply the same Taka motions as 02 | Colab L4 GPU |
+| [`05_Paint3D_Texture_Refinement.ipynb`](05_Paint3D_Texture_Refinement.ipynb) | Refine the base colour of an existing GLB with Paint3D UV Tile | Colab L4 GPU |
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ntakafumi/ImageToPlayable/blob/main/03_Pixal3D_Mesh_Refinement.ipynb)
 
 Notebook 03 takes one PNG/JPEG, removes the background when needed, runs CUDA Pixal3D, and uses the saved source camera to refine the base colour. It saves `model.refined.glb`, the original generated GLB, and comparison images. Notebook 04 takes one static GLB and applies the same TokenRig settings as 01 and the same Taka motion reference as 02.
+
+Notebook 05 is standalone. Open the notebook in Colab, select an L4 GPU, and upload one GLB when prompted.
+The GLB must have one mesh primitive, its existing UVs, a PNG base-colour image and a separate metallic-roughness image.
+The notebook applies Paint3D UV Tile to the existing colours at 1024 × 1024 and returns an updated GLB, PNGs and the run configuration.
+See the [model and dependency terms](LICENSING.md#notebook-05).
 
 ## Place the source tree on Google Drive
 
@@ -38,7 +44,7 @@ My Drive/Colab Notebooks/GameCreation/MotionStudio/10_ImageToCharacter/
 ```
 
 If using the downloadable source ZIP, extract it before placing the folder on Drive.
-The notebooks do not ask you to upload the source ZIP or generate source files from
+Notebooks 01–04 do not ask you to upload the source ZIP or generate source files from
 embedded code. They execute the ordinary source files on mounted Drive.
 
 ## Run

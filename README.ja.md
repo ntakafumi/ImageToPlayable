@@ -22,10 +22,17 @@ Takaのメッシュやテクスチャは含みません。
 | `02_Existing_Rig_to_Taka_Motion.ipynb` | 保存済みのリグ付きGLBへTaka動作を移す | Colab CPUで実行可能 |
 | `03_Pixal3D_Mesh_Refinement.ipynb` | 画像1枚からPixal3Dで生成し、色と白線を補正 | Colab L4 GPU |
 | `04_GLB_to_Taka_Motion.ipynb` | 指定したGLBをTokenRigでリグ付けし、02と同じTaka動作を移植 | Colab L4 GPU |
+| [`05_Paint3D_Texture_Refinement.ipynb`](05_Paint3D_Texture_Refinement.ipynb) | Paint3DのUV Tileで既存GLBのベースカラーを調整 | Colab L4 GPU |
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ntakafumi/ImageToPlayable/blob/main/03_Pixal3D_Mesh_Refinement.ipynb)
 
 03はPNGまたはJPEGを1枚受け取り、必要に応じた背景除去、Pixal3Dでの生成、元画像の色投影、白線補正を順に実行します。最終出力は `model.refined.glb` です。04は静的なGLBを1本受け取り、01と同じ設定のTokenRigで骨を入れ、02と同じTakaの動作を移します。
+
+05は単体で実行できます。
+ColabでL4 GPUを選び、入力欄が出たらGLBを1本アップロードします。
+単一プリミティブで、UV座標、PNGのベースカラー、別画像の金属度と粗さを持つGLBが対象です。
+既存の色を1024 × 1024で調整し、差し替えたGLB、PNG、実行設定をZIPにまとめます。
+[モデルと依存ライブラリの利用条件](LICENSING.md#notebook-05)
 
 ## Google Driveへの配置
 

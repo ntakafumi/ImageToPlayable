@@ -47,3 +47,15 @@ It downloads single-view Pixal3D weights with DINOv3 and NAF, and uses the
 Pinned weights and hashes are listed in `reference/pixal3d_models.json`.
 The corresponding generation and matting notices are under `LICENSES/Pixal3D/`.
 NumPy, SciPy, Pillow, OpenCV Python and ONNX Runtime are installed separately.
+
+## Notebook 05 Paint3D
+
+| Runtime component | Source and terms |
+| --- | --- |
+| Paint3D code | [OpenTexture/Paint3D at d5545d3](https://github.com/OpenTexture/Paint3D/tree/d5545d38db6aaf78efc563269f70177688a4218e), Apache-2.0. See [license text](LICENSES/Paint3D-LICENSE.txt). |
+| UV Position ControlNet | [GeorgeQi/Paint3d_UVPos_Control](https://huggingface.co/GeorgeQi/Paint3d_UVPos_Control), model card tagged Apache-2.0. |
+| Tile ControlNet | [lllyasviel/control_v11f1e_sd15_tile](https://huggingface.co/lllyasviel/control_v11f1e_sd15_tile), model card tagged OpenRAIL. |
+| Realistic Vision V1.3 | [GeorgeQi's conversion](https://huggingface.co/GeorgeQi/realisticVisionV13_v13) is tagged Apache-2.0. The [original SG161222 release](https://huggingface.co/SG161222/Realistic_Vision_V1.3) is tagged CreativeML Open RAIL-M. The original model's use restrictions are relevant to the conversion. |
+| Python GPU runtime | [NVIDIA Kaolin 0.13.0](https://github.com/NVIDIAGameWorks/kaolin/blob/v0.13.0/LICENSE), [PyTorch 1.12.1](https://github.com/pytorch/pytorch/blob/v1.12.1/LICENSE), [NVIDIA CUDA terms](https://docs.nvidia.com/cuda/archive/11.6.2/eula/index.html), and [Diffusers 0.25.0](https://github.com/huggingface/diffusers/blob/v0.25.0/LICENSE). |
+
+Paint3D was developed by Xianfang Zeng and colleagues. See [Paint3D at CVPR 2024](https://openaccess.thecvf.com/content/CVPR2024/html/Zeng_Paint3D_Paint_Anything_3D_with_Lighting-Less_Texture_Diffusion_Models_CVPR_2024_paper.html). The notebook fetches the code, packages and weights at runtime and the repository includes a copy of Paint3D's license for reference.
