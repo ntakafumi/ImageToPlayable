@@ -20,6 +20,12 @@ Takaのメッシュやテクスチャは含みません。
 | --- | --- | --- |
 | `01_Image_to_Taka_Motion_L4.ipynb` | 画像から生成、リギング、Taka動作の移植、操作まで | Colab L4 GPU |
 | `02_Existing_Rig_to_Taka_Motion.ipynb` | 保存済みのリグ付きGLBへTaka動作を移す | Colab CPUで実行可能 |
+| `03_Pixal3D_Mesh_Refinement.ipynb` | 画像1枚からPixal3Dで生成し、色と白線を補正 | Colab L4 GPU |
+| `04_GLB_to_Taka_Motion.ipynb` | 指定したGLBをTokenRigでリグ付けし、02と同じTaka動作を移植 | Colab L4 GPU |
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ntakafumi/ImageToPlayable/blob/main/03_Pixal3D_Mesh_Refinement.ipynb)
+
+03はPNGまたはJPEGを1枚受け取り、必要に応じた背景除去、Pixal3Dでの生成、元画像の色投影、白線補正を順に実行します。最終出力は `model.refined.glb` です。04は静的なGLBを1本受け取り、01と同じ設定のTokenRigで骨を入れ、02と同じTakaの動作を移します。
 
 ## Google Driveへの配置
 
@@ -31,6 +37,7 @@ Colabで教材ZIPをアップロードしたり、Notebookからソースを生�
 マイドライブ/Colab Notebooks/GameCreation/MotionStudio/10_ImageToCharacter/
 ├── 01_Image_to_Taka_Motion_L4.ipynb
 ├── 02_Existing_Rig_to_Taka_Motion.ipynb
+├── 03_Pixal3D_Mesh_Refinement.ipynb
 ├── reference/
 ├── tools/
 ├── motions/taka-motion.json
@@ -113,6 +120,18 @@ MITの補助コードをBlenderと組み合わせる場合も、その組み合�
 詳しくは [LICENSING.md](LICENSING.md) と [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) を参照してください。
 収録動作データは [MOTIONS_LICENSE.md](MOTIONS_LICENSE.md) に従います。
 たかにゃんとTakaの画像、モデル、テクスチャ、ゲーム背景は同梱していません。
+
+
+### 03と04の権利関係
+
+| ノートブック | 商用利用に関係する条件 |
+| --- | --- |
+| 03（Pixal3Dで生成して補正） | Pixal3Dの本体・重みとBiRefNet-liteの重みはMIT系です。DINOv3には独自の用途制限等があり、その条件に従う範囲で商用利用できます。NAFと元画像投影に利用したコードにはApache-2.0を適用します。 |
+| 04（TokenRigと動作移植） | TokenRig本体と公式重みはMITです。04は01のTRELLIS画像生成用の依存関係を組み込みません。リグ入れに使う依存ライブラリと、付属するTaka動作（CC BY 4.0）にはそれぞれの条件が適用されます。 |
+
+[ライセンスの適用範囲](LICENSING.md)、[第三者の通知](THIRD_PARTY_NOTICES.md)、[Taka動作の条件](MOTIONS_LICENSE.md)を確認してください。
+入力画像やキャラに含まれる第三者の権利も別途確認してください。
+Colabでの検証範囲は[検証記録](VALIDATION.md)に記載します。
 
 ## 関連記事
 

@@ -1,0 +1,3 @@
+Notice excerpt. See the pinned pixal3d.cpp source for the complete file.
+
+See the stb_image_resize entry in runtime-NOTICE.txt and the vendored source in the pinned pixal3d.cpp checkout.

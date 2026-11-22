@@ -1,0 +1,8 @@
+Notice excerpt. See the pinned pixal3d.cpp source for the complete file.
+
+//
+//  httplib.h
+//
+//  Copyright (c) 2025 Yuji Hirose. All rights reserved.
+//  MIT License
+//

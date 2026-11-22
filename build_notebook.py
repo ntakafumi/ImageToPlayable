@@ -106,7 +106,191 @@ run_logged([PYTHON, ROOT / 'tools/prepare_transfer.py',
     name = '02_Existing_Rig_to_Taka_Motion.ipynb' if existing else '01_Image_to_Taka_Motion_L4.ipynb'
     (ROOT / name).write_text(json.dumps(notebook, ensure_ascii=False, indent=2))
 
+def build_pixal3d():
+    import textwrap
+    cells = []
+
+    def cell(kind, content):
+        item = dict(cell_type=kind, id=f'cell-{len(cells):02}', metadata={},
+                    source=textwrap.dedent(content).strip().splitlines(True))
+        if kind == 'code':
+            item.update(outputs=[], execution_count=None)
+        cells.append(item)
+
+    cell('markdown', '''
+    # 03 画像からPixal3Dで3D化して色を補正する
+
+    ColabのL4 GPUを選びます。入力はPNGまたはJPEGの画像1枚です。
+    背景があればBiRefNet-liteで切り抜き、Pixal3Dで静的な3Dモデルを生成します。
+    保存されたカメラ情報を使って元画像の色を投影し、画像で裏づけられない明るい線を補正します。
+    最終出力の `model.refined.glb` を04でリグ付けできます。
+    GitHubのソース一式を事前にGoogle Driveへ配置してください。
+    ''')
+    cell('code', '''
+    from google.colab import drive
+    from pathlib import Path
+    import sys
+
+    drive.mount('/content/drive')
+    PROJECT_DIR = '/content/drive/MyDrive/Colab Notebooks/GameCreation/MotionStudio/10_ImageToCharacter' #@param {type:'string'}
+    ROOT = Path(PROJECT_DIR).expanduser().resolve()
+    if not (ROOT / 'tools/pixal3d_generate.py').is_file():
+        raise FileNotFoundError('最新版のソース一式があるDriveフォルダーを指定してください。')
+    sys.dont_write_bytecode = True
+    sys.path.insert(0, str(ROOT / 'tools'))
+    from colab_runtime import read_input, run_logged
+    ''')
+    cell('markdown', '''
+    ## 画像と生成条件を指定する
+
+    Drive上のパスを指定します。空欄ならファイル選択画面を開きます。
+    初回はCUDA版のビルドと約8GBの重みの取得があり、その後にGPU生成とCPU補正が続きます。
+    同じランタイム内では確認済みのビルドと重みを再利用します。
+    ''')
+    cell('code', '''
+    from uuid import uuid4
+
+    IMAGE_PATH = '' #@param {type:'string'}
+    SEED = 42 #@param {type:'integer'}
+    FOV_DEGREES = 20.0 #@param {type:'number'}
+
+    ENGINE = Path('/content/image-to-playable-pixal3d')
+    JOB = ENGINE / 'runs' / uuid4().hex[:12]
+    JOB.mkdir(parents=True)
+    _, payload = read_input(IMAGE_PATH)
+    SOURCE = JOB / 'source-image'
+    SOURCE.write_bytes(payload)
+    ''')
+    cell('code', '''
+    import shutil
+    import subprocess
+
+
+    uv_path = shutil.which('uv')
+    if uv_path is None:
+        bootstrap = ENGINE / 'uv-bootstrap'
+        run_logged([sys.executable, '-m', 'pip', 'install', '--target', bootstrap,
+                    'uv==0.9.5'], JOB / 'uv-bootstrap.log')
+        uv_path = str(bootstrap / 'bin/uv')
+
+    VENV = ENGINE / 'venv-uv'
+    PYTHON = VENV / 'bin/python'
+    if not PYTHON.is_file():
+        run_logged([uv_path, 'venv', '--python', sys.executable, VENV],
+                   JOB / 'venv.log')
+
+    run_logged([uv_path, 'pip', 'install', '--python', PYTHON,
+                'numpy==2.2.6', 'scipy==1.16.2', 'pillow==11.3.0',
+                'opencv-python-headless==4.12.0.88', 'onnxruntime==1.30.0'],
+               JOB / 'dependencies.log')
+    run_logged([PYTHON, '-c', 'import numpy, scipy, PIL, cv2, onnxruntime'],
+               JOB / 'imports.log')
+    ''')
+    cell('code', '''
+    GENERATED = JOB / 'generated'
+    run_logged([PYTHON, ROOT / 'tools/pixal3d_generate.py', '--base', ENGINE,
+                '--image', SOURCE, '--out', GENERATED, '--seed', SEED,
+                '--fov', FOV_DEGREES], JOB / 'generation.log')
+    ''')
+    cell('code', '''
+    import os
+
+    RESULT = JOB / 'refined'
+    subprocess.run([str(PYTHON), '-m', 'pixal3d_refine',
+                    '--model', str(GENERATED / 'model.glb'),
+                    '--views', str(GENERATED / 'model.svviews'),
+                    '--output', str(RESULT)], check=True, env={
+        **os.environ, 'PYTHONPATH': str(ROOT / 'tools'), 'PYTHONDONTWRITEBYTECODE': '1',
+        'OPENBLAS_NUM_THREADS': '2', 'OMP_NUM_THREADS': '2',
+    })
+    ''')
+    cell('code', '''
+    from IPython.display import Image, display
+
+    for name in ('00_projection.jpg', '01_colour.jpg'):
+        display(Image(filename=str(RESULT / name)))
+    ''')
+    cell('code', '''
+    import shutil
+
+    destination = ROOT / 'outputs' / ('pixal3d-' + JOB.name)
+    shutil.copytree(RESULT, destination)
+    for name in ('model.glb', 'input.png', 'generation.json'):
+        shutil.copy2(GENERATED / name, destination / name)
+    shutil.copytree(GENERATED / 'model.svviews', destination / 'model.svviews')
+    for path in JOB.glob('*.log'):
+        shutil.copy2(path, destination / path.name)
+    print('04に渡すファイル:', destination / 'model.refined.glb')
+    ''')
+    notebook = dict(cells=cells, metadata={'colab': {'gpuType':'L4'}, 'accelerator':'GPU',
+        'kernelspec': {'name': 'python3', 'display_name': 'Python 3'},
+        'language_info': {'name': 'python'}}, nbformat=4, nbformat_minor=5)
+    (ROOT / '03_Pixal3D_Mesh_Refinement.ipynb').write_text(
+        json.dumps(notebook, ensure_ascii=False, indent=2) + '\n')
+
+
+
+
+
+def build_tokenrig_single():
+    import textwrap
+    cells = []
+
+    def cell(kind, source):
+        item = dict(cell_type=kind, id=f'cell-{len(cells):02}', metadata={},
+                    source=textwrap.dedent(source).strip().splitlines(True))
+        if kind == 'code':
+            item.update(outputs=[], execution_count=None)
+        cells.append(item)
+
+    cell('markdown', '''
+    # 04 指定したGLBにTokenRigで骨を入れ、Takaの動作を移す
+
+    ColabのL4 GPUを選びます。入力はリグ付け前の静的GLB 1本です。
+    01と同じ設定のTokenRigで骨を入れ、02と同じTakaの5動作を移します。
+    ''')
+    cell('code', MOUNT + '''
+required_04 = ('tools/rig_to_taka.py', 'tools/orient_pixal_input.py',
+               'tools/pixal3d_refine/photo_paint.py')
+missing_04 = [name for name in required_04 if not (ROOT / name).is_file()]
+if missing_04:
+    raise FileNotFoundError('04のソースが不足しています。最新版ソースZIPをDriveに展開してください: '
+                            + ', '.join(missing_04))
+''')
+    cell('code', '''
+    ENGINE = Path('/content/motionstudio10/tokenrig-engine')
+    run_logged([sys.executable, ROOT / 'reference/setup_l4.py', '--base', ENGINE,
+                '--rig-only'], JOB / 'setup.log')
+    ''')
+    cell('markdown', '''
+    ## GLBを1本指定する
+
+    Drive上のパスを `GLB_PATH` に設定します。
+    03の `model.refined.glb` なら `FROM_PIXAL3D_03` をオンにします。
+    他のツールで作った正面が+ZのGLBはオフにします。
+    向きや変形は、出力されたビューアで確認してください。
+    ''')
+    cell('code', '''
+    from rig_to_taka import run_case
+
+    GLB_PATH = '' #@param {type:'string'}
+    FROM_PIXAL3D_03 = True #@param {type:'boolean'}
+    if not GLB_PATH.strip():
+        raise ValueError('処理する静的GLBを1本指定してください。')
+    JOB = create_job(ROOT)
+    TRANSFER = run_case(ROOT, ENGINE, Path(GLB_PATH).expanduser(), JOB, FROM_PIXAL3D_03)
+    ARCHIVE = save_result(ROOT, TRANSFER, JOB)
+    ''')
+    cell('code', VIEW)
+    notebook = dict(cells=cells, metadata={'colab': {'gpuType':'L4'}, 'accelerator':'GPU',
+        'kernelspec': {'name':'python3','display_name':'Python 3'},
+        'language_info': {'name':'python'}}, nbformat=4, nbformat_minor=5)
+    (ROOT / '04_GLB_to_Taka_Motion.ipynb').write_text(
+        json.dumps(notebook, ensure_ascii=False, indent=2)+'\n')
+
 if __name__ == '__main__':
     build(False)
     build(True)
+    build_pixal3d()
+    build_tokenrig_single()
     print('Built Drive-backed notebooks')

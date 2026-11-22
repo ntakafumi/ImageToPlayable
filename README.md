@@ -14,6 +14,12 @@ Includes idle, walk, jog, run and jump. `motions/taka-motion.json` records frame
 | --- | --- | --- |
 | `01_Image_to_Taka_Motion_L4.ipynb` | Image generation, rigging, retargeting and controls | Colab L4 GPU |
 | `02_Existing_Rig_to_Taka_Motion.ipynb` | Retarget an existing rigged GLB | Colab CPU is sufficient |
+| `03_Pixal3D_Mesh_Refinement.ipynb` | Generate from one PNG/JPEG with Pixal3D, then refine the texture | Colab L4 GPU |
+| `04_GLB_to_Taka_Motion.ipynb` | Rig one static GLB and apply the same Taka motions as 02 | Colab L4 GPU |
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ntakafumi/ImageToPlayable/blob/main/03_Pixal3D_Mesh_Refinement.ipynb)
+
+Notebook 03 takes one PNG/JPEG, removes the background when needed, runs CUDA Pixal3D, and uses the saved source camera to refine the base colour. It saves `model.refined.glb`, the original generated GLB, and comparison images. Notebook 04 takes one static GLB and applies the same TokenRig settings as 01 and the same Taka motion reference as 02.
 
 ## Place the source tree on Google Drive
 
@@ -23,6 +29,7 @@ Copy the GitHub source tree to:
 My Drive/Colab Notebooks/GameCreation/MotionStudio/10_ImageToCharacter/
   01_Image_to_Taka_Motion_L4.ipynb
   02_Existing_Rig_to_Taka_Motion.ipynb
+  03_Pixal3D_Mesh_Refinement.ipynb
   reference/
   tools/
   motions/taka-motion.json
@@ -84,6 +91,16 @@ Original independent tutorial code and documentation: MIT. The Blender API scrip
 Notebook 02 reopens completed results without rerunning image generation. This does not settle permissions for the original generation purpose, input artwork or motion data.
 See [LICENSING.md](LICENSING.md), [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), and the separate motion terms in [MOTIONS_LICENSE.md](MOTIONS_LICENSE.md).
 Takanyan and Taka images, meshes, textures and the game environment are not bundled.
+
+
+### Commercial-use scope of notebooks 03 and 04
+
+| Notebook | Relevant terms |
+| --- | --- |
+| 03 (Pixal3D generation and refinement) | The selected Pixal3D components and BiRefNet-lite weights have permissive licenses. DINOv3 uses its own license, which allows commercial use subject to conditions including use restrictions. NAF and the adapted texture-projection code are Apache-2.0. |
+| 04 (TokenRig and motion transfer) | The published TokenRig code and checkpoints are MIT. The rig-only setup skips the TRELLIS image-generation path used in 01. The rigging dependencies and the bundled Taka motion reference (CC BY 4.0) keep their own terms. |
+
+See [LICENSING.md](LICENSING.md), [third-party notices](THIRD_PARTY_NOTICES.md) and [motion terms](MOTIONS_LICENSE.md). Clear rights to the input artwork and any third-party content separately. See [validation](VALIDATION.md) for what has run on Colab.
 
 ## Related article
 

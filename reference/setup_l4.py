@@ -1,7 +1,7 @@
 """教材用の独立環境。生成APIとゲーム素材を使わず、公開モデルを実行する。"""
 
 from pathlib import Path
-import subprocess, sys, os, json, urllib.request, argparse, hashlib
+import subprocess, sys, os, json, urllib.request, argparse, hashlib, re, tempfile
 
 PINS = {'TRELLIS': {'url': 'https://github.com/microsoft/TRELLIS.git', 'commit': '193e0502b5cb3eb5997ec457d5340e95d09b158e'}, 'nvdiffrast': {'url': 'https://github.com/NVlabs/nvdiffrast.git', 'commit': '253ac4fcea7de5f396371124af597e6cc957bfae'}, 'mip-splatting': {'url': 'https://github.com/autonomousvision/mip-splatting.git', 'commit': 'dda02ab5ecf45d6edb8c540d9bb65c7e451345a9'}}
 
@@ -13,7 +13,32 @@ def run(args, **kw):
     subprocess.run(list(map(str, args)), check=True, **kw)
 
 
-def setup(base):
+def rig_apt_sources(destination, system=Path('/etc/apt')):
+    """Copy APT sources for this invocation, excluding the unrelated CRAN mirror."""
+    cran = 'cloud.r-project.org/bin/linux/ubuntu/'
+    parts = destination / 'sources.list.d'
+    parts.mkdir()
+    main = system / 'sources.list'
+    entries = [main, *sorted((system / 'sources.list.d').glob('*.list')),
+               *sorted((system / 'sources.list.d').glob('*.sources'))]
+    for source in entries:
+        if not source.is_file():
+            continue
+        original = source.read_text()
+        if source.suffix == '.sources':
+            stanzas = re.split(r'\n[ \t]*\n', original)
+            filtered = '\n\n'.join(stanza for stanza in stanzas if cran not in stanza)
+        else:
+            filtered = ''.join(line for line in original.splitlines(keepends=True)
+                               if cran not in line)
+        target = (destination if source == main else parts) / source.name
+        target.write_text(filtered)
+    (destination / 'sources.list').touch(exist_ok=True)
+    return ['-o', f'Dir::Etc::sourcelist={destination / "sources.list"}',
+            '-o', f'Dir::Etc::sourceparts={parts}']
+
+
+def setup(base, rig_only=False):
     base = Path(base)
     base.mkdir(parents=True, exist_ok=True)
     gpu_line = subprocess.check_output(
@@ -35,6 +60,7 @@ def setup(base):
             Path(__file__).read_text()
             + json.dumps(PINS,sort_keys=True)
             + cap
+            + str(rig_only)
         ).encode()
     ).hexdigest()
     marker = base / "ready.json"
@@ -48,7 +74,9 @@ def setup(base):
             [
                 py,
                 "-c",
-                "import torch,bpy,flash_attn,kaolin,spconv.pytorch,nvdiffrast.torch,diff_gaussian_rasterization; assert torch.cuda.is_available(); print(torch.cuda.get_device_name())",
+                ("import torch,bpy,flash_attn,kaolin,spconv.pytorch;"
+                 + ("" if rig_only else "import nvdiffrast.torch,diff_gaussian_rasterization;")
+                 + "assert torch.cuda.is_available(); print(torch.cuda.get_device_name())"),
             ]
         )
         print("検査済みの専用環境を使います。", flush=True)
@@ -68,30 +96,33 @@ def setup(base):
         "-o",
         "Acquire::http::Timeout=60",
     ]
-    run(apt + ["update", "-qq"])
-    run(
-        apt
-        + [
-            "install",
-            "-y",
-            "-qq",
-            "--no-install-recommends",
-            "cuda-compiler-12-8",
-            "cuda-libraries-dev-12-8",
-            "libegl1",
-            "libgl1",
-            "libopengl0",
-            "libglib2.0-0",
-            "libxrender1",
-            "libsm6",
-            "libxi6",
-            "libxxf86vm1",
-            "libxfixes3",
-            "libxcursor1",
-            "libxinerama1",
-            "libxrandr2",
-        ]
-    )
+    with tempfile.TemporaryDirectory(prefix='tokenrig-apt-', dir=base) as source_dir:
+        if rig_only:
+            apt += rig_apt_sources(Path(source_dir))
+        run(apt + ["update", "-qq"])
+        run(
+            apt
+            + [
+                "install",
+                "-y",
+                "-qq",
+                "--no-install-recommends",
+                "cuda-compiler-12-8",
+                "cuda-libraries-dev-12-8",
+                "libegl1",
+                "libgl1",
+                "libopengl0",
+                "libglib2.0-0",
+                "libxrender1",
+                "libsm6",
+                "libxi6",
+                "libxxf86vm1",
+                "libxfixes3",
+                "libxcursor1",
+                "libxinerama1",
+                "libxrandr2",
+            ]
+        )
     boot = base / "bootstrap"
     run([sys.executable, "-m", "pip", "install", "-q", "--target", boot, "uv==0.9.5"])
     uv = boot / "bin/uv"
@@ -200,7 +231,8 @@ def setup(base):
     pip(
         "https://nvidia-kaolin.s3.us-east-2.amazonaws.com/torch-2.7.0_cu128/kaolin-0.18.0-cp311-cp311-linux_x86_64.whl"
     )
-    setup_trellis(base, py, pip, run)
+    if not rig_only:
+        setup_trellis(base, py, pip, run)
     with (base / "packages.txt").open("w") as f:
         subprocess.run([py, "-m", "pip", "freeze"], stdout=f, check=True)
     marker.write_text(
@@ -248,4 +280,6 @@ def setup_trellis(base, py, pip, run):
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--base", required=True)
-    setup(p.parse_args().base)
+    p.add_argument("--rig-only", action="store_true")
+    args = p.parse_args()
+    setup(args.base, rig_only=args.rig_only)

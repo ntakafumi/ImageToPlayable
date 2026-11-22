@@ -36,3 +36,28 @@ Drive-path validation, input handling, viewer-file preparation and result persis
 were tested locally with an isolated orchestration fixture. The authenticated Drive
 mount and current notebook GUI flow were not automated on Colab. Inference and
 retargeting scripts remain those exercised by the preceding L4 CLI validation.
+
+## Notebook 03: image to refined Pixal3D mesh
+
+Pixal3D generation and source projection have been run on the two examples
+using the pinned native Metal build on Mac. The new notebook route checks the
+same nine GGUF weights and uses the saved camera from its own generation stage.
+The image preprocessing was tested with transparent PNG and opaque JPEG.
+A fixture substituted for the CUDA executable to check that notebook-stage
+generation paths and camera files are passed through to refinement successfully.
+The Linux CUDA build and complete L4 run in hosted Colab are pending validation.
+
+## Notebook 04: single-GLB TokenRig and motion transfer
+
+The input orientation stage was checked on the two refined Pixal3D GLBs.
+The Taka motion reference and the five clip names were checked against prior
+animated outputs. New TokenRig inference and retargeting on these
+refined meshes require a Colab GPU and have not been exercised yet.
+
+### Notebook 03 environment setup on Python 3.13
+
+Following a Colab report that the standard-library venv command returned exit
+code 1, notebook 03 now creates an unseeded environment with uv and installs
+packages using uv pip. The environment creation was checked on Python 3.13,
+and the pinned packages resolved for Linux x86-64 with Python 3.13. The CUDA
+build and image-to-GLB run in hosted Colab remain to be exercised.

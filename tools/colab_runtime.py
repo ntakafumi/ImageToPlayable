@@ -156,9 +156,9 @@ def serve_web(web):
     return server
 
 
-def save_result(root, transfer, job):
+def save_result(root, transfer, job, destination=None):
     character = transfer / 'character'
-    destination = root / 'outputs' / job.name
+    destination = Path(destination) if destination is not None else root / 'outputs' / job.name
     destination.mkdir(parents=True, exist_ok=True)
     archive_path = destination / 'character-taka-result.zip'
     with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED) as archive:

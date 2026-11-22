@@ -1,0 +1,58 @@
+{
+  "repo": "raven38/pixal3d-sv-q8_0-v1",
+  "revision": "46d399ac986f45a0d7f5b1ca5058614d8729a131",
+  "files": [
+    {
+      "file": "dinov3.gguf",
+      "bytes": 323657920,
+      "sha256": "0dd4ffd4b46a248f5b7d49c35275d68461fbf73f57ddb4c1fa8afb4f7bb45a0d"
+    },
+    {
+      "file": "pixal3d_naf.gguf",
+      "bytes": 1334656,
+      "sha256": "c4f6cd80e94c8d120360ba50a3633322e6ecce0163966e3b7650b24f99c18569"
+    },
+    {
+      "file": "pixal3d_shape_flow_1024_sv.gguf",
+      "bytes": 1476761760,
+      "sha256": "7cb1ecb189719edbbb991d16271ad0f8ab8bf54154df7795830aadba27f0efae"
+    },
+    {
+      "file": "pixal3d_shape_flow_512_sv.gguf",
+      "bytes": 1476761760,
+      "sha256": "13f5df430ca49e6011827a3eeb208f047bdbad1fd4e52549809eaab63b83e19e"
+    },
+    {
+      "file": "pixal3d_ss_flow_sv.gguf",
+      "bytes": 1426559744,
+      "sha256": "75eeb538c5485e02f091d1fc8a55c8132035076a4e01b7e9607883deff3852c4"
+    },
+    {
+      "file": "pixal3d_tex_flow_1024_sv.gguf",
+      "bytes": 1476813984,
+      "sha256": "06ef23d3badafc6f8ffcecebbc2bd0297461852b6c125dc4448f80d78040ee17"
+    },
+    {
+      "file": "shape_dec.gguf",
+      "bytes": 881361568,
+      "sha256": "0de7c7a675022dd8696d526a9279e5a50b2a35c8a79452f434a72dc53d40f169"
+    },
+    {
+      "file": "ss_dec.gguf",
+      "bytes": 147379392,
+      "sha256": "2790b5eecb261cc877d9bf175ce2bd6dd48cd65be8c042c5f5bc023dfca01cf7"
+    },
+    {
+      "file": "tex_dec.gguf",
+      "bytes": 881344576,
+      "sha256": "88b4fced46455e02f316664d5c43584a311921dd9a1cdc1b7b7d981cca9214d4"
+    }
+  ],
+  "matte": {
+    "repo": "AssetFurnace/birefnet-lite-onnx",
+    "revision": "7d8f1d2b2bb8ece3c6feeefc1a10682fd5de53b0",
+    "file": "birefnet-lite-1024.onnx",
+    "bytes": 180666557,
+    "sha256": "a97176abb6fe55525b11113bf5bead5a9b5866b2c0d4ac058186cabb86cadfff"
+  }
+}

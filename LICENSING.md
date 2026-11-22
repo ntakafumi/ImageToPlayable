@@ -38,3 +38,22 @@ Code licensing, permission to run a generation tool, and rights in an input or o
 Neither MIT nor GPL grants rights to someone else's input artwork, character or motion data.
 The research-use terms above concern use of the respective software; they do not by themselves establish a new copyright license for every generated output.
 Do not interpret this distinction as permission to use a research-only tool for commercial asset production.
+
+## Notebook 03
+
+Notebook 03 runs a pinned pixal3d.cpp CUDA build and downloads pinned
+[Pixal3D single-view GGUF weights](https://huggingface.co/raven38/pixal3d-sv-q8_0-v1/tree/46d399ac986f45a0d7f5b1ca5058614d8729a131).
+The Pixal3D and runtime notices are retained. DINOv3 uses its separate license
+with use restrictions, redistribution conditions and research attribution
+requirements. The NAF component retains Apache-2.0. Background removal uses the
+MIT BiRefNet-lite ONNX conversion and MIT ONNX Runtime.
+AssetFurnace's adapted texture routines retain Apache-2.0 and their notice.
+This route does not install the restricted TRELLIS rasterizers used by notebook 01.
+
+## Notebook 04
+
+Notebook 04 starts with one static GLB and reuses the TokenRig and motion-transfer
+paths from notebooks 01 and 02. Its setup does not build the TRELLIS
+mesh-generation path listed above. The TokenRig code and published checkpoints,
+third-party rigging dependencies, input assets, and the separate CC BY 4.0 motion license
+retain their own terms.

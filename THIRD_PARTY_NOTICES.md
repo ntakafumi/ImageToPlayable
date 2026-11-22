@@ -2,7 +2,7 @@
 
 Original independent tutorial code is MIT-licensed. The Blender API script tools/animate10.py is GPL-3.0-or-later; see LICENSE and LICENSING.md.
 Dependencies and pretrained weights are downloaded separately; their own licenses apply.
-No character meshes, textures, model weights, or upstream source trees are bundled. The included Taka animation reference has separate terms in MOTIONS_LICENSE.md.
+No character meshes, textures, model weights, or complete upstream source trees are bundled. The included Taka animation reference has separate terms in MOTIONS_LICENSE.md.
 
 | Component | Role | Official source |
 | --- | --- | --- |
@@ -33,3 +33,17 @@ The environment is not wholly MIT-licensed and is not offered as a commercially 
 
 The MIT license of TRELLIS or SkinTokens does not override these dependencies.
 No commercial-use permission for these components is supplied by this repository.
+
+## Notebook 03
+
+`tools/pixal3d_refine/{photo_paint,view_align}.py` are adapted from
+[AssetFurnace / image-to-3dlab](https://github.com/Bingeljell/image-to-3dlab/tree/a319975821a6437258cf299e8154aa286a63d9ad)
+at commit `a319975821a6437258cf299e8154aa286a63d9ad` (Apache-2.0).
+Imports were adjusted to use this package.
+See [license](LICENSES/AssetFurnace-LICENSE.txt) and [upstream notice](LICENSES/AssetFurnace-NOTICE.txt).
+Notebook 03 builds [pixal3d.cpp](https://github.com/raven38/pixal3d.cpp) with CUDA and GGML.
+It downloads single-view Pixal3D weights with DINOv3 and NAF, and uses the
+[BiRefNet-lite ONNX conversion](https://huggingface.co/AssetFurnace/birefnet-lite-onnx) for opaque inputs.
+Pinned weights and hashes are listed in `reference/pixal3d_models.json`.
+The corresponding generation and matting notices are under `LICENSES/Pixal3D/`.
+NumPy, SciPy, Pillow, OpenCV Python and ONNX Runtime are installed separately.

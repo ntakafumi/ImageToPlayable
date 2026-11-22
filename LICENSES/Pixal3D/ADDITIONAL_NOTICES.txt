@@ -1,0 +1,11 @@
+NAF: Zero-Shot Feature Upsampling via Neighborhood Attention Filtering
+Official project: https://github.com/valeoai/NAF
+Authors listed by the project: Loick Chambon, Paul Couairon, Eloi Zablocki,
+Alexandre Boulch, Nicolas Thome, Matthieu Cord.
+Upstream license: Apache License 2.0 (NAF_APACHE_LICENSE.txt).
+
+The Pixal3D GGUF distribution's MIT index does not replace the original
+NAF license. This installation preserves the Apache-2.0 text separately.
+
+The DINOv3 image encoder remains under the DINOv3 License; it is not MIT.
+See DINOv3_LICENSE.md and the model distribution's DINOV3_LICENSE.md.
